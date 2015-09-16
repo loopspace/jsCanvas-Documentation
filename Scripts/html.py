@@ -30,9 +30,10 @@ if __name__ == '__main__':
     write("""
           <html>
             <head>
+              <meta charset="utf-8">
               <link rel="stylesheet" type="text/css" href="css/style.css">     
               <script src="lib/jquery-1.10.1.min.js" type="text/javascript" charset="utf-8"></script>                        
-              <title>{name} &mdash; Codea</title>
+              <title>{name} &mdash; LuaCanvas</title>
             </head>
             <body>
               <a name="top"></a>
@@ -40,9 +41,9 @@ if __name__ == '__main__':
           """.format(**data))
           
     #Print title and subtitle
-    write("""        
+    write(u"""        
               <div class='header'>
-                <img id='codea' src='images/Codea-Logo.png' height='200px'/>
+                <img id='luacanvas' src='images/LuaCanvas-Logo.png' height='200px'/>
                 <div id='chapter'>
                     <div id='chapter-title'>
                     <h1>{name}</h1>
@@ -50,7 +51,7 @@ if __name__ == '__main__':
                 </div>
               <h3 class="subtitle"><a href="index.html">Reference</a> ❯ {subtitle}</h3>
               </div>
-          """.format(**data))
+          """.encode('utf8').format(**data))
           
     #Print sections of document
     write("""
@@ -94,11 +95,11 @@ if __name__ == '__main__':
         funcs = functions_for_section(data, s)
         
         for f in funcs:
-            write("""
+            write(u"""
                   <div class='function'>
                     <h3><div class='type-icon type-{category}'></div><a name='{id}'>{name}</a> <a class="toplink" href="#top">top ↑</a></h3>
                     <div class='function-body'>
-                  """.format(**f))
+                  """.encode('utf8').format(**f))
                   
             #Print syntax                  
             if "syntax" in f:
