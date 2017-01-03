@@ -33,7 +33,7 @@ if __name__ == '__main__':
               <meta charset="utf-8">
               <link rel="stylesheet" type="text/css" href="css/style.css">     
               <script src="lib/jquery-1.10.1.min.js" type="text/javascript" charset="utf-8"></script>                        
-              <title>{name} &mdash; LuaCanvas</title>
+              <title>{name} &mdash; jsCanvas</title>
             </head>
             <body>
               <a name="top"></a>
@@ -43,13 +43,13 @@ if __name__ == '__main__':
     #Print title and subtitle
     write(u"""        
               <div class='header'>
-                <img id='luacanvas' src='images/LuaCanvas-Logo.png' height='200px'/>
+                <img id='jscanvas' src='images/jsCanvas-Logo.png' height='200px'/>
                 <div id='chapter'>
                     <div id='chapter-title'>
                     <h1>{name}</h1>
                     </div>
                 </div>
-              <h3 class="subtitle"><a href="index.html">Reference</a> ❯ {subtitle}</h3>
+              <h3 class="subtitle"><a href="../help.html">Reference</a> ❯ {subtitle}</h3>
               </div>
           """.encode('utf8').format(**data))
           
@@ -211,7 +211,7 @@ if __name__ == '__main__':
                 editors[{count}].setHighlightActiveLine(false);
                 editors[{count}].setShowInvisibles(false);                
                 editors[{count}].setTheme("ace/theme/github");
-                editors[{count}].getSession().setMode("ace/mode/lua");
+                editors[{count}].getSession().setMode("ace/mode/javascript");
                 editors[{count}].resize()
               """.format(count=i))
     write("""           

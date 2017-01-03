@@ -2,10 +2,42 @@ id: parameters
 name: Parameters
 subtitle: Creating Parameters to Control Your Projects
 ordering:
+    - Overview
     - Creating Parameters
     - Watching Expressions
-    - Clearing the Parameter List
-functions:      
+    - Printing
+    - Clearing the Parameter and Output List
+functions:
+
+#---------------------------------
+# Parameter Overview
+#---------------------------------
+- id: parameterOverview
+  category: overview
+  description: |
+    Parameters are ways to elicit information from the user.  A
+    parameter defines a widget in the parameters panel (on the left of
+    the browser window) which the user can interact with at any time
+    during the execution of the script.  The parameter functions all
+    have a similar syntax:
+    
+        parameter.type("Some text","name",...,callback)
+
+    This displays an appropriate widget in the parameters panel
+    according to the type with title text `Some text`.  There is a
+    special object called `parameters` which holds the current values
+    of the various defined parameters, and this one is referenced by
+    `name`.  So in your code, you can use `parameters.name` to get the
+    current value.
+
+    The `callback` is a function which is called whenever the
+    parameter is changed by the user.  It takes one argument which is
+    the new value of the parameter.
+    
+  group: Overview
+  name: Overview of Parameters
+#---------------------------------
+
 #---------------------------------
 # parameter.number
 #--------------------------------- 
@@ -17,87 +49,16 @@ functions:
 
     You generally call
     the `parameter.number()` function in the `setup()` function of your **main**
-    file. The string you specify for `name` will be exposed as a global variable
+    file. The string you specify for `name` will be added to the
+    `parameters` table
     that can be used in your code. When you adjust the slider in the viewer, the
-    variable will be set appropriately. The last three parameters, `min`, `max`
-    and `initial` allow you to set the minimum, maximum and initial value of
+    variable will be set appropriately. The three parameters, `min`, `max`,
+    and `step` allow you to set the minimum, maximum, and step value of
     your parameter respectively. If an initial value is not specified, then the
     parameter takes on the minimum value initially. If no minimum or maximum values
-    are specified, the parameter uses the range [0, 1].
-    
-    
-    The optional `callback` argument specifies a callback function to be called when the parameter
-    slider changes. This callback function is provided the parameter's value as its
-    single argument.    
-  examples:
-  - example: |
-      function setup()
-          --Creates a global variable called Radius
-          parameter.number("Radius", 50.0, 300.0, 100.0)
-      end
-      
-      function draw()
-          background(128)
-          ellipseMode(RADIUS)
-          ellipse(WIDTH/2, HEIGHT/2, Radius)
-      end
-  group: Creating Parameters
-  id: parameter.number
-  name: parameter.number( name, min, max )
-  parameters:
-  - description: string, the parameter function will create a global variable with
-      this name
-    name: name
-  - description: int or float, specifies the minimum value that your parameter can
-      take
-    name: min
-  - description: int or float, specifies the maximum value that your parameter can
-      take
-    name: max
-  - description: int or float, specifies the initial, or starting, value of the
-      parameter
-    name: initial
-  - description: function, this function will be called whenever the parameter is changed,
-      it will be given the parameter value as an argument
-    name: callback
-  related:
-  - parameter.integer
-  - parameter.text
-  - parameter.color
-  - parameter.boolean
-  - parameter.action
-  - parameter.clear
-  syntax: |
-    parameter.number( name )
-    parameter.number( name, min, max )
-    parameter.number( name, min, max, initial )
-    parameter.number( name, min, max, initial, callback )
-#---------------------------------
-      
-#---------------------------------
-# parameter.integer
-#---------------------------------       
-- category: function
-  description: >
-    This function creates a visual slider in the viewer that can be
-    used to adjust a global variable in your code.
-    
-
-    The main difference
-    between this function and the `parameter.number()` function is that this function
-    always sets the variable declared in `name` to an integer value. Thus its
-    min, max and initial values must also be integers.
-    
-
-    You generally
-    call the `parameter.integer()` function in the `setup()` function of your
-    **main** file. The string you specify for `name` will be exposed as
-    a global variable that can be used in your code. When you adjust the slider
-    in the viewer, the variable will be set appropriately. The last three parameters,
-    `min`, `max` and `initial` allow you to set the minimum, maximum
-    and initial value of your parameter respectively. If an initial value is not
-    specified, then the parameter takes on the minimum value initially. If no minimum
-    or maximum values are specified, the parameter uses the range [0, 10].
+    are specified, the parameter uses the range [0, 1] with step value
+    0.1.  If the minimum and maximum are specified but the step value
+    is not, the step value is taken to be 1.
     
     
     The optional `callback` argument specifies a callback function to be called when the parameter
@@ -106,146 +67,132 @@ functions:
   examples:
   - example: |
       function setup()
-          --Creates a global variable called Radius
-          -- It also has a callback that prints the
-          -- value when changed
-          parameter("Radius", 50, 300, 100,
-            function(x) print(x) end )
+          //Creates a global variable called Radius
+          parameter.number("Radius", "radius", 50, 300, 1, 100);
       end
       
       function draw()
-          background(128)
-          ellipseMode(RADIUS)
-          ellipse(WIDTH/2, HEIGHT/2, Radius)
+          background(128);
+          ellipseMode(RADIUS);
+          ellipse(WIDTH/2, HEIGHT/2, parameters.radius);
       end
   group: Creating Parameters
-  id: parameter.integer
-  name: parameter.integer( name, min, max )
+  id: parameter.number
+  name: parameter.number( text, name, min, max, step, initial, callback )
   parameters:
-  - description: string, the parameter.integer function will create a global variable with
-      this name
+  - description: string, the text is displayed above the slider
+    name: text
+  - description: string, the parameter function will create a key in
+          the `parameters` table to hold the value
     name: name
-  - description: int, specifies the minimum value that your parameter can take
+  - description: int or float, specifies the minimum value that your parameter can
+      take
     name: min
-  - description: int, specifies the maximum value that your parameter can take
+  - description: int or float, specifies the maximum value that your parameter can
+      take
     name: max
-  - description: int, specifies the initial, or starting, value of the parameter
+  - description: int or float, specifies the step value for the slider
+    name: slider
+  - description: int or float, specifies the initial, or starting, value of the
+      parameter
     name: initial
   - description: function, this function will be called whenever the parameter is changed,
       it will be given the parameter value as an argument
     name: callback
   related:
-  - parameter.number
   - parameter.text
-  - parameter.color
-  - parameter.boolean
+  - parameter.colour
+  - parameter.bool
   - parameter.action
   - parameter.clear
   syntax: |
-    parameter.integer( name )
-    parameter.integer( name, min, max )
-    parameter.integer( name, min, max, initial )
-    parameter.integer( name, min, max, initial, callback )
+    parameter.number( text, name )
+    parameter.number( text, name, min, max )
+    parameter.number( text, name, min, max, step )
+    parameter.number( text, name, min, max, step, initial )
+    parameter.number( text, name, min, max, step, initial, callback )
 #---------------------------------
+     
 
 #---------------------------------
-# parameter.color
+# parameter.colour
 #--------------------------------- 
 - category: function
   description: >
-    This function creates a visual color sample in the viewer that can be
-    used to adjust a global color variable in your code.
+    This function creates a visual colour sample in the viewer that can be
+    used to adjust a colour variable in the `parameters` object in your code.
     
 
     You generally call
-    the `parameter.color()` function in the `setup()` function of your **main**
-    file. The string you specify for `name` will be exposed as a global variable
-    of the color type.
+    the `parameter.colour()` function in the `setup()` function of your **main**
+    file. The string you specify for `name` will be added to the
+    `parameters` table as a colour type.
 
     
-    This can be used in your code. When you tap the color sample in the viewer, an interactive 
-    color picker will be presented, allowing you to adjust the variable live, while your code
+    This can be used in your code. When you tap the colour sample in the viewer, an interactive 
+    colour picker will be presented, allowing you to adjust the variable live, while your code
     is running. 
     
     
-    You may also set the initial value of the color with either a color object, a gray scale
-    value, or an rgb triplet (you may include an alpha value as well).
+    You may also set the initial value of the colour with a colour object.
     
-    
-    The optional `callback` argument specifies a callback function to be called when the color value changes. 
-    This callback function is provided a single argument, of the color type, containing the
+    The optional `callback` argument specifies a callback function to be called when the colour value changes. 
+    This callback function is provided a single argument, of the colour type, containing the
     new value.
+
+    Note that this uses the HTML5 colour picker.  In some browsers,
+    there is no obvious `Select` button and the picker should be
+    dismissed by clicking the `X` button on its window.
+
+
   examples:
   - example: |
-      function setup()
-          --Creates a global color variable called FillColor
-          -- make it red by default
-          parameter.color("FillColor", 255, 0, 0)
+      function setup() {
+          // Creates a colour parameter variable called fillcolour
+          // make it red by default
+          parameter.colour("Fill Colour", 'fillcolour', new Colour('red'));
           
-          --Creates a global color varialbe called StrokeColor
-          -- make it white by default
-          parameter.color("StrokeColor", color(255))
-      end
+          // Creates a global colour parameter variable called strokecolour
+          // make it white by default
+          parameter.colour("Stroke Colour", 'strokecolour', new Colour('white'));
+      }
       
-      function draw()
-          background(128)
+      function draw() {
+          background(128);
 
-          strokeWidth(10)
+          strokeWidth(10);
           
-          --Set our colors using the parameter values
-          stroke(StrokeColor)
-          fill(FillColor)
+          --Set our colours using the parameter values
+          stroke(parameters.strokecolour);
+          fill(parameters.fillcolour);
 
-          ellipse(WIDTH/2, HEIGHT/2, 300)
-      end
+          ellipse(WIDTH/2, HEIGHT/2, 300);
+      }
   group: Creating Parameters
-  id: parameter.color
-  name: parameter.color( name, color )
+  id: parameter.colour
+  name: parameter.colour( text, name, colour, callback )
   parameters:
-  - description: string, the parameter function will create a global color variable with
-      this name
+  - description: string, the text displayed by the colour picker
+    name: text
+  - description: string, the parameter function will create a colour variable with
+      this name in the parameters object
     name: name
-  - description: int, specifies the initial value of the red component of the color
-    name: red
-  - description: int, specifies the initial value of the green component of the color
-    name: green
-  - description: int, specifies the initial value of the blue component of the color
-    name: blue
-  - description: int, specifies the gray value of the color
-    name: gray    
-  - description: int, specifies the initial value of the alpha component of the color
-    name: alpha
+  - description: colour, specifies the initial colour
+    name: colour
   - description: function, this function will be called whenever the parameter is changed,
-      it will be given the new color value as an argument
+      it will be given the new colour value as an argument
     name: callback
   related:
-  - color
-  - parameter.integer
+  - colour
   - parameter.text
   - parameter.number
-  - parameter.boolean
+  - parameter.bool
   - parameter.action
   - parameter.clear
   syntax: |
-    parameter.color( name )
-    parameter.color( name, color )
-    parameter.color( name, color, callback )
-
-    parameter.color( name )
-    parameter.color( name, red, green, blue )
-    parameter.color( name, red, green, blue, callback )
-    
-    parameter.color( name )
-    parameter.color( name, red, green, blue, alpha )
-    parameter.color( name, red, green, blue, alpha, callback )
-    
-    parameter.color( name )
-    parameter.color( name, gray )
-    parameter.color( name, gray, callback )
-    
-    parameter.color( name )
-    parameter.color( name, gray, alpha )
-    parameter.color( name, gray, alpha, callback )
+    parameter.colour( text, name )
+    parameter.colour( text, name, colour )
+    parameter.colour( text, name, colour, callback )
 #---------------------------------
 
 #---------------------------------
@@ -260,17 +207,16 @@ functions:
   name: parameter.clear()
   related:
   - parameter.number
-  - parameter.integer
-  - parameter.color
+  - parameter.colour
   - parameter.action
-  - parameter.boolean
+  - parameter.bool
   - parameter.watch
   - output.clear
   syntax: parameter.clear()
 #---------------------------------
       
 #---------------------------------
-# parameter.boolean
+# parameter.bool
 #--------------------------------- 
 - category: function
   description: >
@@ -279,8 +225,9 @@ functions:
     
 
     You generally call
-    the `parameter.boolean()` function in the `setup()` function of your **main**
-    file. The string you specify for `name` will be exposed as a global variable
+    the `parameter.bool()` function in the `setup()` function of your **main**
+    file. The string you specify for `name` will be exposed as a
+    variable in the parameters object
     that can be used in your code. 
     
     
@@ -295,20 +242,22 @@ functions:
     single argument.    
   examples:
   - example: |
-      function setup()
-          -- Creates a simple switch that prints when changed
-          parameter.boolean("MySwitch", true, switchChanged)
+      function setup() {
+          // Creates a simple switch that prints when changed
+          parameter.bool("My Switch", "myswitch", true, switchChanged);
       end
       
-      function switchChanged( value )
-          print( "MySwitch changed to " .. tostring(value) )
-      end
+      function switchChanged( value ) {
+          print( "My Switch changed to " + value );
+      }
   group: Creating Parameters
-  id: parameter.boolean
-  name: parameter.boolean( name, initial )
+  id: parameter.bool
+  name: parameter.bool( text, name, initial, callback )
   parameters:
-  - description: string, the parameter function will create a global variable with
-      this name
+  - description: string, the text shown in the parameter pane
+    name: text
+  - description: string, the parameter function will create a variable with
+      this name in the parameters object
     name: name
   - description: boolean, specifies the initial value of the boolean parameter
     name: initial
@@ -316,17 +265,15 @@ functions:
       it will be given the parameter value as an argument
     name: callback
   related:
-  - parameter.integer
   - parameter.text
-  - parameter.color
+  - parameter.colour
   - parameter.number
   - parameter.action
   - parameter.clear
   syntax: |
-    parameter.boolean( name )
-    parameter.boolean( name, initial )
-    parameter.boolean( name, initial, callback )
-    parameter.boolean( name, callback )    
+    parameter.bool( text, name )
+    parameter.bool( text, name, initial )
+    parameter.bool( text, name, initial, callback )
 #--------------------------------- 
 
 #---------------------------------
@@ -335,13 +282,14 @@ functions:
 - category: function
   description: >
     This function creates a visual text box in the viewer. You can type in this
-    control to adjust the contents of the corresponding string value defined by
-    `name`.
+    control to adjust the contents of the corresponding string value
+    in the parameters object defined by `name`.
     
 
     You generally call
     the `parameter.text()` function in the `setup()` function of your **main**
-    file. The string you specify for `name` will be exposed as a global variable
+    file. The string you specify for `name` will be exposed as a value
+    in the parameters object
     that can be used in your code. 
     
     
@@ -355,21 +303,23 @@ functions:
     single argument.    
   examples:
   - example: |
-      function setup()
-          -- Creates a simple switch that prints when changed
-          parameter.text("MyText", "Hello World!", textChanged)
-      end
+      function setup() {
+          // Creates a simple switch that prints when changed
+          parameter.text("Write some text", "mytext", "Hello World!", textChanged);
+      }
       
-      -- Print our text parameter in upper-case
-      function textChanged( value )
+      // Print our text parameter in upper-case
+      function textChanged( value ) {
           print( string.upper(value) )
-      end
+      }
   group: Creating Parameters
   id: parameter.text
-  name: parameter.text( name, initial )
+  name: parameter.text( text, name, initial )
   parameters:
-  - description: string, the parameter function will create a global variable with
-      this name
+  - description: string, the text to display above the input field
+    name: text
+  - description: string, the parameter function will create a variable with
+      this key in the parameters object
     name: name
   - description: string, specifies the initial value of the text parameter
     name: initial
@@ -377,17 +327,15 @@ functions:
       it will be given the parameter value as an argument
     name: callback
   related:
-  - parameter.integer
-  - parameter.boolean
-  - parameter.color
+  - parameter.bool
+  - parameter.colour
   - parameter.number
   - parameter.action
   - parameter.clear
   syntax: |
-    parameter.text( name )
-    parameter.text( name, initial )
-    parameter.text( name, initial, callback )
-    parameter.text( name, callback )    
+    parameter.text( text, name )
+    parameter.text( text, name, initial )
+    parameter.text( text, name, initial, callback )
 #---------------------------------  
 
 #---------------------------------
@@ -403,17 +351,17 @@ functions:
     You generally call
     the `parameter.action()` function in the `setup()` function of your **main**
     file. The string you specify for `name` will be used to label the button that
-    appears in the viewer. It will not be exposed as a global variable.
+    appears in the viewer. It will not be exposed as a variable.
     
     
     The `callback` argument specifies a callback function to be called when the
     button is pressed. It is passed the `name` of the button as its only argument.
   examples:
   - example: |
-      function setup()
-          -- Creates a button to clear the output
-          parameter.action("Clear Output", output.clear)
-      end
+      function setup() {
+          // Creates a button to clear the output
+          parameter.action("Clear Output", output.clear);
+      }
   group: Creating Parameters
   id: parameter.action
   name: parameter.action( name, callback )
@@ -425,15 +373,56 @@ functions:
       it will be given the parameter value as an argument
     name: callback
   related:
-  - parameter.integer
-  - parameter.boolean
-  - parameter.color
+  - parameter.bool
+  - parameter.colour
   - parameter.number
   - parameter.text
   - parameter.clear
   syntax: |
     parameter.action( name, callback )    
 #---------------------------------            
+      
+#---------------------------------
+# parameter.watch
+#---------------------------------       
+- category: function
+  description: This function allows you to monitor the return value of
+    a javascript function
+    within the viewer. Generally you call the `parameter.watch()` function from the `setup()`
+    function in your **main** file.
+  examples:
+  - example: |
+      function setup() {
+          // Shows the elapsed time in the viewer
+          parameter.watch("Elapsed Time",function() {return ElapsedTime;});
+      }
+  group: Watching Expressions
+  id: parameter.watch
+  name: parameter.watch( text, function )
+  parameters:
+  - description: string, the title shown above the output
+    name: text
+  - description: function, the function whose return value to show
+    name: function
+  related:
+  - parameter.clear
+  syntax: parameter.watch( text, function )
+#---------------------------------
+  
+#---------------------------------
+# print
+#---------------------------------       
+- category: function
+  description: This function prints a string (or something that can be
+     converted to a string) to the output buffer.
+  group: Printing
+  id: print()
+  name: print()
+  parameters:
+  - description: string, the text to print
+    name: text
+  syntax: print(text)
+#---------------------------------
 
 #---------------------------------
 # output.clear
@@ -446,27 +435,3 @@ functions:
   name: output.clear()
   syntax: output.clear()
 #---------------------------------
-      
-#---------------------------------
-# parameter.watch
-#---------------------------------       
-- category: function
-  description: This function allows you to monitor the value of a Lua expression
-    within the viewer. Generally you call the `parameter.watch()` function from the `setup()`
-    function in your **main** file.
-  examples:
-  - example: |
-      function setup()
-          --Shows the elapsed time in the viewer
-          parameter.watch("ElapsedTime")
-      end
-  group: Watching Expressions
-  id: parameter.watch
-  name: parameter.watch( expression )
-  parameters:
-  - description: string, the global variable or expression to watch
-    name: expression
-  related:
-  - parameter.clear
-  syntax: parameter.watch( expression )
-  
